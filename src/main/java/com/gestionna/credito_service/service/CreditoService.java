@@ -4,6 +4,8 @@ import com.gestionna.credito_service.dto.CreditoRequestDto;
 import com.gestionna.credito_service.dto.CreditoResponseDto;
 import com.gestionna.credito_service.entity.Credito;
 import com.gestionna.credito_service.repository.CreditoRepository;
+import com.gestionna.credito_service.service.exceptions.InvalidParameterException;
+import com.gestionna.credito_service.service.exceptions.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -33,19 +35,28 @@ public class CreditoService {
         return creditos.stream().map(this::toResponseDto).collect(Collectors.toList());
     }
 
-    private CreditoResponseDto toResponseDto(Credito c) {
+    public CreditoResponseDto buscarPorNumeroCredito(String numeroCredito) {
+        Optional<Credito> credito = creditoRepository.findByNumeroCredito(numeroCredito);
+        return credito
+                .map(this::toResponseDto)
+                .orElseThrow(() ->
+                        new InvalidParameterException("Crédito com número '" + numeroCredito + "' não encontrado."));
+    }
+
+
+    private CreditoResponseDto toResponseDto(Credito credito) {
         CreditoResponseDto dto = new CreditoResponseDto();
-        dto.setId(c.getId());
-        dto.setNumeroCredito(c.getNumeroCredito());
-        dto.setNumeroNfse(c.getNumeroNfse());
-        dto.setDataConstituicao(c.getDataConstituicao());
-        dto.setValorIssqn(c.getValorIssqn());
-        dto.setTipoCredito(c.getTipoCredito());
-        dto.setSimplesNacional(Boolean.parseBoolean(c.isSimplesNacional() ? "Sim" : "Não"));
-        dto.setAliquota(c.getAliquota());
-        dto.setValorFaturado(c.getValorFaturado());
-        dto.setValorDeducao(c.getValorDeducao());
-        dto.setBaseCalculo(c.getBaseCalculo());
+        dto.setId(credito.getId());
+        dto.setNumeroCredito(credito.getNumeroCredito());
+        dto.setNumeroNfse(credito.getNumeroNfse());
+        dto.setDataConstituicao(credito.getDataConstituicao());
+        dto.setValorIssqn(credito.getValorIssqn());
+        dto.setTipoCredito(credito.getTipoCredito());
+        dto.setSimplesNacional(credito.isSimplesNacional());
+        dto.setAliquota(credito.getAliquota());
+        dto.setValorFaturado(credito.getValorFaturado());
+        dto.setValorDeducao(credito.getValorDeducao());
+        dto.setBaseCalculo(credito.getBaseCalculo());
         return dto;
     }
 

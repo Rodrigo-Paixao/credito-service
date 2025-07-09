@@ -10,8 +10,6 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class CreditoResponseDto {
 
     private Long id;
@@ -26,7 +24,6 @@ public class CreditoResponseDto {
     private BigDecimal valorDeducao;
     private BigDecimal baseCalculo;
 
-    public CreditoResponseDto(Long id, String numeroCredito, String numeroNfse, LocalDate dataConstituicao, BigDecimal valorIssqn, String tipoCredito, String s, BigDecimal aliquota, BigDecimal valorFaturado, BigDecimal valorDeducao, BigDecimal baseCalculo) {
+    public CreditoResponseDto() {
     }
-
 }

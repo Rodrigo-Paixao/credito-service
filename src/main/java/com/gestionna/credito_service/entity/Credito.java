@@ -19,7 +19,7 @@ public class Credito {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "numero_credito", length = 50, nullable = false, unique = true)
+    @Column(name = "numero_credito", unique = true, length = 50, nullable = false)
     private String numeroCredito;
 
     @Column(name = "numero_nfse", length = 50, nullable = false)

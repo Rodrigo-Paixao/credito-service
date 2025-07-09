@@ -1,6 +1,7 @@
 package com.gestionna.credito_service.exception;
 
 import com.gestionna.credito_service.service.exceptions.DataBindingViolationException;
+import com.gestionna.credito_service.service.exceptions.InvalidParameterException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.ObjectNotFoundException;
@@ -106,6 +107,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidParameterException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidParameterException(
+            InvalidParameterException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getStatus().value(),
+                ex.getMessage()
+        );
+        return ResponseEntity.status(ex.getStatus()).body(errorResponse);
+    }
+
+
     private ResponseEntity<Object> buildErrorResponse(
             Exception exception,
             HttpStatus httpStatus,
@@ -119,10 +138,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus httpStatus,
             WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(httpStatus.value(), message);
-        if (this.printStackTrace) {
+        if (printStackTrace && isDevEnvironment()) {
             errorResponse.setStackTrace(ExceptionUtils.getStackTrace(exception));
         }
+
         return ResponseEntity.status(httpStatus).body(errorResponse);
+    }
+
+    private boolean isDevEnvironment() {
+        return false;
     }
 
 }

@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 @Data
 @RequiredArgsConstructor
@@ -19,6 +20,11 @@ public class ErrorResponse {
     private final String message;
     private String stackTrace;
     private List<ValidationError> errors;
+
+    public ErrorResponse(HttpStatus status, String message) {
+        this.status = status.value();
+        this.message = message;
+    }
 
     @Getter
     @Setter

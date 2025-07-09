@@ -15,8 +15,9 @@ public class CreditoRequestDto {
     @Size(max = 50)
     private String numeroCredito;
 
-    @NotBlank(message = "O número da NFS-e é obrigatório")
-    @Size(max = 50)
+    @NotBlank(message = "O número da NFS‑e é obrigatório")
+    @Pattern(regexp = "\\d+", message = "Número da NFS‑e deve conter apenas dígitos")
+    @Size(max = 50, message = "Número da NFS‑e pode ter no máximo 15 dígitos")
     private String numeroNfse;
 
     @NotNull(message = "A data de constituição é obrigatória")
