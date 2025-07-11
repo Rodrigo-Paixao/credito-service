@@ -30,8 +30,16 @@ spring:
 
   sql:
     init:
-#      mode: always
-      mode: embedded
+      mode: always
+#      mode: embedded
+
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    template:
+      default-topic: consulta-creditos-topic
 
 #  h2:
 #    console:

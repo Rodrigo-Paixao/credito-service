@@ -3,6 +3,7 @@ package com.gestionna.credito_service.controller;
 import com.gestionna.credito_service.dto.CreditoRequestDto;
 import com.gestionna.credito_service.dto.CreditoResponseDto;
 import com.gestionna.credito_service.entity.Credito;
+import com.gestionna.credito_service.kafka.KafkaEventPublisher;
 import com.gestionna.credito_service.service.CreditoService;
 import com.gestionna.credito_service.validation.ParametroValidator;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +26,7 @@ import java.util.List;
 public class CreditoController {
 
     private final CreditoService creditoService;
+    private final KafkaEventPublisher kafkaEventPublisher;
 
 
     @PostMapping(produces = {"application/json"})
@@ -45,8 +47,9 @@ public class CreditoController {
             @ApiResponse(responseCode = "404", description = "Crédito(s) não encontrado", content = @Content),
             @ApiResponse(responseCode = "500", description = "Ocorreu um erro ao buscar pelo dado informado.", content = @Content)})
     @GetMapping("/{numeroNfse}")
-    public ResponseEntity<List<CreditoResponseDto>> buscarPorNumeroNfse(@PathVariable String numeroNfse) {
+    public ResponseEntity<List<CreditoResponseDto>> buscarPorNumeroNfse(@PathVariable @Valid String numeroNfse) {
         ParametroValidator.validarNumeroNfse(numeroNfse.trim());
+        kafkaEventPublisher.publicarConsulta(numeroNfse);
         List<CreditoResponseDto> lista = creditoService.buscarPorNumeroNfse(numeroNfse);
         return ResponseEntity.ok(lista);
     }

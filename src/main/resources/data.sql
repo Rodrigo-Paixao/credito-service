@@ -11,3 +11,10 @@ INSERT INTO credito (
 ('321654', '111222', '2024-01-10', 1000.00, 'ISSQN', true, 3.5, 15000.00, 2000.00, 13000.00),
 ('987654', '333444', '2024-02-20', 2500.00, 'ISSQN', false, 5.0, 50000.00, 5000.00, 45000.00),
 ('963852', '555666', '2024-03-05', 1800.00, 'ISSQN', true, 4.0, 20000.00, 3000.00, 17000.00);
+
+
+CREATE TABLE kafka_log (
+    id SERIAL PRIMARY KEY,
+    mensagem TEXT,
+    data_registro TIMESTAMP
+);
